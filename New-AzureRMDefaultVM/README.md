@@ -1,0 +1,1 @@
+Creates a VM with default settings.
