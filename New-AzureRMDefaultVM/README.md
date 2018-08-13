@@ -4,4 +4,3 @@ Creates a VM with default settings.
 WIP
 
 Public IP
-NSG
