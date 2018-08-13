@@ -14,7 +14,6 @@ https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps?view=azurer
 Connect-AzureRmAccount
 ```
 </br>
-</br>
 <b>#3a. Optional, only applies if you manage more then one subscription</b> Get your subscriptions in Azure
 ``` 
 Get-AzureRmSubscription
