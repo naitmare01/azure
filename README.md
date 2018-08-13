@@ -9,6 +9,7 @@ Powershell scripts for Azure for Data Ductus
 https://docs.microsoft.com/en-us/powershell/azure/install-azurerm-ps?view=azurermps-6.6.0
 </br>
 </br>
-<B>#2.</b> Connect to Azure ```powershell
+<B>#2.</b> Connect to Azure 
+``` powershell
 Connect-AzureRmAccount
 ```
