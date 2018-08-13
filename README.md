@@ -15,12 +15,10 @@ Connect-AzureRmAccount
 ```
 </br>
 <b>#3a. Optional, only applies if you manage more then one subscription</b> Get your subscriptions in Azure
-```
 Get-AzureRmSubscription
-```
-
-</br>
 </br>
 <b>#3b. Optional, only applies if you manage more then one subscription</b> Select your subscriptions in Azure
-
+``` powershell
+Connect-AzureRmAccount
+```
 Select-AzureRmSubscription
