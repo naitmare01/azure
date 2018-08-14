@@ -65,7 +65,7 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
             $nsgName = $ResourceGroupName + "-nsg"
             Write-Verbose "Creating the virtual network $vnetname..."
             $Nsgrule1 = New-AzureRmNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
-            $nsg = New-AzureRmNetworkSecurityGroup -ResourceGroupName $ResourceGroupName -Location $Location -Name $nsgName -SecurityRules $rule1 -Tag $Tags
+            $nsg = New-AzureRmNetworkSecurityGroup -ResourceGroupName $ResourceGroupName -Location $Location -Name $nsgName -SecurityRules $Nsgrule1 -Tag $Tags
             $virtualNetwork = New-AzureRmVirtualNetwork -ResourceGroupName $ResourceGroupName -Location $Location -Name $vnetName -AddressPrefix 10.0.0.0/16 -Tag $Tags
             $null = Add-AzureRmVirtualNetworkSubnetConfig -Name default -AddressPrefix 10.0.0.0/24 -VirtualNetwork $virtualNetwork -NetworkSecurityGroup $nsg
             $null = $virtualNetwork | Set-AzureRmVirtualNetwork
