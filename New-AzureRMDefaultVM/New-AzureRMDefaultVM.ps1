@@ -76,21 +76,12 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
             $VMName = $ResourceGroupName + "-vm"
             Write-Verbose "Creating the vm $VMName..."
             $Credential = Get-Credential -Message "Type the name and password of the local administrator account for $VMName."
-            #$StorageAccount = New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name ($ResourceGroupName.ToLower() + "storage") -Type Standard_LRS -Location $Location -Tag $Tags
             $VirtualMachine = New-AzureRmVMConfig -VMName $VMName -VMSize $Size
             $VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $VMName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
             $VirtualMachine = Add-AzureRmVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
             $VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2016-Datacenter' -Version latest
-            #$OSDiskUri = $StorageAccount.PrimaryEndpoints.Blob.ToString() + "vhds/" + ($VMName + "-OS") + ".vhd"
-            #$VirtualMachine = Set-AzureRMVMOSDisk -VM $VirtualMachine -Name ($VMName + "-OS") -VhdUri $OSDiskUri -CreateOption FromImage
-            $VirtualMachine = Set-AzureRmVMOSDisk -VM $VirtualMachine -Name ($VMName + "-OS") -StorageAccountType Standard_LRS -DiskSizeInGB 128 -CreateOption FromImage -Caching ReadWrite
             $null = New-AzureRmVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Tag $Tags
-
-            #Get the public IP of the VM 
-            #Write-Verbose "Getting public ip of the vm $VMName..."
-            #$PublicIP = Get-AzureRmPublicIpAddress -Name $VMName -ResourceGroupName $ResourceGroupName
             
-
         }#End if
         else{
             return
@@ -101,7 +92,7 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
         $CustomObject | Add-Member -Type NoteProperty -Name "ResourceGroupName" -Value $ResourceGroupName
         $CustomObject | Add-Member -Type NoteProperty -Name "VM Name" -Value $VMName
         $CustomObject | Add-Member -Type NoteProperty -Name "VMLocalAdminUser" -Value $Credential.UserName
-        #$CustomObject | Add-Member -Type NoteProperty -Name "VM Public IP" -Value $PublicIP.IpAddress
+        $CustomObject | Add-Member -Type NoteProperty -Name "VM Public IP" -Value $pip.IpAddress    
         $CustomObject | Add-Member -Type NoteProperty -Name "VNet Name" -Value $vnetName
         $CustomObject | Add-Member -Type NoteProperty -Name "Tag" -Value $tags['Environment']
         $null = $ReturnArray.Add($CustomObject)
