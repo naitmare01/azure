@@ -80,6 +80,9 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
             $VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $VMName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
             $VirtualMachine = Add-AzureRmVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
             $VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2016-Datacenter' -Version latest
+            $StorageAcc = New-AzureRmStorageAccount -Name ($ResourceGroupName.ToLower() + "storage") -ResourceGroupName $ResourceGroupName –Type Standard_LRS -Location $location -Tag $Tags
+            $OSDiskUri = $StorageAcc.PrimaryEndpoints.Blob.ToString() + "vhds/" + $VMName + "osdisk" + ".vhd"
+            $VirtualMachine = Set-AzureRmVMOSDisk -VM $VirtualMachine -Name $VMName -VhdUri $OSDiskUri -CreateOption fromImage
             $null = New-AzureRmVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Tag $Tags
             
         }#End if
