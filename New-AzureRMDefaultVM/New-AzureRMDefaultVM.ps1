@@ -56,9 +56,6 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
         $Answer = Read-Host "This will create a Resource Group, a VM and a virtual network, do you want to proceed? [Y/N]"
 
         if($Answer -like "y"){
-            #Create the resourcegroup
-            Write-Verbose "Creating the resourcegroup $ResourceGroupName..."
-            $null = New-AzureRmResourceGroup -Name $ResourceGroupName -Tag $Tags -Location $Location
 
             #Create and configure the virtual network
             $vnetName = $ResourceGroupName + "-vnet"
@@ -76,18 +73,19 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
             $VMName = $ResourceGroupName + "-vm"
             Write-Verbose "Creating the vm $VMName..."
             $Credential = Get-Credential -Message "Type the name and password of the local administrator account for $VMName."
-            $StorageAccount = New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name ($ResourceGroupName.ToLower() + "storage") -Type Standard_LRS -Location $Location
+            $StorageAccount = New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name ($ResourceGroupName.ToLower() + "storage") -Type Standard_LRS -Location $Location -Tag $Tags
             $VirtualMachine = New-AzureRmVMConfig -VMName $VMName -VMSize $Size
             $VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $VMName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
             $VirtualMachine = Add-AzureRmVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
             $VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2016-Datacenter' -Version latest
-            $OSDiskUri = $StorageAccount.PrimaryEndpoints.Blob.ToString() + + "vhds/" + ($VMName + "-OS") + ".vhd"
+            $OSDiskUri = $StorageAccount.PrimaryEndpoints.Blob.ToString() + "vhds/" + ($VMName + "-OS") + ".vhd"
             $VirtualMachine = Set-AzureRMVMOSDisk -VM $VirtualMachine -Name ($VMName + "-OS") -VhdUri $OSDiskUri -CreateOption FromImage
             $null = New-AzureRmVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Tag $Tags
 
             #Get the public IP of the VM 
             #Write-Verbose "Getting public ip of the vm $VMName..."
             #$PublicIP = Get-AzureRmPublicIpAddress -Name $VMName -ResourceGroupName $ResourceGroupName
+            
 
         }#End if
         else{
