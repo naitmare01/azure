@@ -69,37 +69,37 @@ Specifies the Size of the VM. Default is Standard_D2s_v3.
             $virtualNetwork = New-AzureRmVirtualNetwork -ResourceGroupName $ResourceGroupName -Location $Location -Name $vnetName -AddressPrefix 10.0.0.0/16 -Tag $Tags
             $null = Add-AzureRmVirtualNetworkSubnetConfig -Name default -AddressPrefix 10.0.0.0/24 -VirtualNetwork $virtualNetwork -NetworkSecurityGroup $nsg
             $null = $virtualNetwork | Set-AzureRmVirtualNetwork
-            $NIC = New-AzureRmNetworkInterface -Name "default" -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId ((Get-AzureRmVirtualNetwork -ResourceGroupName $ResourceGroupName).subnets.id)
+            $pip = New-AzureRmPublicIpAddress -ResourceGroupName $ResourceGroupName -Location $Location -Name ($ResourceGroupName + "-pip") -AllocationMethod Dynamic -IdleTimeoutInMinutes 4
+            $NIC = New-AzureRmNetworkInterface -Name "default" -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId ((Get-AzureRmVirtualNetwork -ResourceGroupName $ResourceGroupName).subnets.id) -PublicIpAddressId $pip.Id
 
             #Create and config the vm
             $VMName = $ResourceGroupName + "-vm"
             Write-Verbose "Creating the vm $VMName..."
-            $VMLocalAdminUser = "LocalAdminUser"
-            $Password = Read-Host "Enter password for the localadmin account"
-            $VMLocalAdminSecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ($VMLocalAdminUser, $VMLocalAdminSecurePassword)
+            $Credential = Get-Credential -Message "Type the name and password of the local administrator account for $VMName."
+            $StorageAccount = New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -Name ($ResourceGroupName.ToLower() + "storage") -Type Standard_LRS -Location $Location
             $VirtualMachine = New-AzureRmVMConfig -VMName $VMName -VMSize $Size
             $VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $VMName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
             $VirtualMachine = Add-AzureRmVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
             $VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2016-Datacenter' -Version latest
+            $OSDiskUri = $StorageAccount.PrimaryEndpoints.Blob.ToString() + + "vhds/" + ($VMName + "-OS") + ".vhd"
+            $VirtualMachine = Set-AzureRMVMOSDisk -VM $VirtualMachine -Name ($VMName + "-OS") -VhdUri $OSDiskUri -CreateOption FromImage
             $null = New-AzureRmVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Tag $Tags
 
             #Get the public IP of the VM 
-            Write-Verbose "Getting public ip of the vm $VMName..."
-            $PublicIP = Get-AzureRmPublicIpAddress -Name $VMName -ResourceGroupName $ResourceGroupName
+            #Write-Verbose "Getting public ip of the vm $VMName..."
+            #$PublicIP = Get-AzureRmPublicIpAddress -Name $VMName -ResourceGroupName $ResourceGroupName
 
         }#End if
         else{
             return
         }
 
-
         #Construct custom Object
         $CustomObject = New-Object System.Object
         $CustomObject | Add-Member -Type NoteProperty -Name "ResourceGroupName" -Value $ResourceGroupName
         $CustomObject | Add-Member -Type NoteProperty -Name "VM Name" -Value $VMName
-        $CustomObject | Add-Member -Type NoteProperty -Name "VMLocalAdminUser" -Value $VMLocalAdminUser
-        $CustomObject | Add-Member -Type NoteProperty -Name "VM Public IP" -Value $PublicIP.IpAddress
+        $CustomObject | Add-Member -Type NoteProperty -Name "VMLocalAdminUser" -Value $Credential.UserName
+        #$CustomObject | Add-Member -Type NoteProperty -Name "VM Public IP" -Value $PublicIP.IpAddress
         $CustomObject | Add-Member -Type NoteProperty -Name "VNet Name" -Value $vnetName
         $CustomObject | Add-Member -Type NoteProperty -Name "Tag" -Value $tags['Environment']
         $null = $ReturnArray.Add($CustomObject)
