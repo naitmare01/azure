@@ -6,7 +6,7 @@
             "value": "westeurope"
         },
         "virtualMachineName": {
-            "value": "palceholder"
+            "value": "placeholder"
         },
         "virtualMachineSize": {
             "value": "Standard_D2s_v3"
