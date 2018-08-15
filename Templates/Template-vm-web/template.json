@@ -7,7 +7,7 @@
             "defaultValue": "westeurope",
             "allowedValues": [
                 "westeurope"
-            ],
+            ]
         },
         "virtualMachineName": {
             "type": "string",
