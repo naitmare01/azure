@@ -13,4 +13,4 @@ Subnets are: 10.0.0.0/24-10.0.3.0/24
 <b>#2.</b> Run <i>deploy.ps1</i>, <i>deploy.sh</i>, <i>DeploymentHelper.cs</i> or <i>deployer.rb</i>
 </br>
 </br>
-<b>#3.</b> Optionall, copy <i>deploy.ps1</i> to <b>Templates</b> in the Azure Portal and deploy the template from the portal. 
+<b>#3.</b> Optionall, copy <i>template.json</i> to <b>Templates</b> in the Azure Portal and deploy the template from the portal. 
