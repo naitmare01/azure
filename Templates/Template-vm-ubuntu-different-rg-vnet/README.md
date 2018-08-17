@@ -10,7 +10,7 @@
 This template creates a VM in a VNET which is in a different Resource Group. You'll need to have the VNET created before running this template and pass the VNET name and its resource group name as input to this parameter.
 
 </br>
-Create the vnet with this template: https://github.com/naitmare01/azure/tree/master/Templates/Template-networking
+Create the VNET with this template: https://github.com/naitmare01/azure/tree/master/Templates/Template-networking
 
 </br>
 </br>
