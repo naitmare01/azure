@@ -8,3 +8,7 @@
 </a>
 
 This template creates a VM in a VNET which is in a different Resource Group. You'll need to have the VNET created before running this template and pass the VNET name and its resource group name as input to this parameter.
+
+</br>
+</br>
+Original code: https://github.com/Azure/azure-quickstart-templates/tree/master/201-vm-different-rg-vnet
