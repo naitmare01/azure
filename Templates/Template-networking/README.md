@@ -1,16 +1,13 @@
-Creates a vnet(10.0.0.0/16) with 4 subnet and default NSG associated with all subnets. 
+#Creates a vnet(10.0.0.0/16) with 4 subnet and default NSG associated with all subnets. 
 </br>
 </br>
-The subnets is called DC, App, Web and SQL. 
+This template creates a VNET with 4 subnet and a network security group. The subnets is called DC, App, Web and SQL. 
 </br>
 </br>
-Subnets are: 10.0.0.0/24-10.0.3.0/24
-</br>
-</br>
-<b>#1.<b> Edit <i>parameters.json</i>, change null to desired value. 
-</br>
-</br>
-<b>#2.</b> Run <i>deploy.ps1</i>, <i>deploy.sh</i>, <i>DeploymentHelper.cs</i> or <i>deployer.rb</i>
-</br>
-</br>
-<b>#3.</b> Optionall, copy <i>template.json</i> to <b>Templates</b> in the Azure Portal and deploy the template from the portal. 
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/naitmare01/azure/master/Templates/Template-vm-ubuntu-different-rg-vnet/azuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+<a href="http://armviz.io/#/?load=https://raw.githubusercontent.com/naitmare01/azure/master/Templates/Template-vm-ubuntu-different-rg-vnet/azuredeploy.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
+</a>

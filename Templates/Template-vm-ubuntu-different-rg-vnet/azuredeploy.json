@@ -35,16 +35,12 @@
                 "description": "Size of the VM"
             }
         },
-        "imagePublisher": {
-            "type": "string",
-            "defaultValue": "Canonical",
-            "metadata": {
-                "description": "Image Publisher"
-            }
-        },
         "imageOffer": {
             "type": "string",
             "defaultValue": "UbuntuServer",
+            "allowedValues": [
+                "UbuntuServer"
+            ],
             "metadata": {
                 "description": "Image Offer"
             }
@@ -113,7 +109,8 @@
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('subnet1Name'))]",
         "varStorageAccountName": "[concat(toLower('storage'), uniqueString(resourceGroup().id))]",
         "location": "[resourceGroup().location]",
-        "nicName": "intnic01"
+        "nicName": "intnic01",
+        "imagePublisher": "Canonical"
     },
     "resources": [
         {
@@ -166,7 +163,7 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "[parameters('imagePublisher')]",
+                        "publisher": "[variables('imagePublisher')]",
                         "offer": "[parameters('imageOffer')]",
                         "sku": "[parameters('imageSKU')]",
                         "version": "latest"
