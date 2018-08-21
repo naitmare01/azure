@@ -4,11 +4,11 @@
     "parameters": {
         "virtualNetworksName": {
             "defaultValue": "vnet01",
-            "type": "String"
+            "type": "string"
         },
         "networkSecurityGroups_networking_name": {
             "defaultValue": "networking",
-            "type": "String"
+            "type": "string"
         }
     },
     "variables": {},
